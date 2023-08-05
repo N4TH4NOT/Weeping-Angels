@@ -63,5 +63,7 @@
   "variant.weeping_angels.rusted": "Alice (Rusted)",
   "variant.weeping_angels.rusted_no_arm": "Alice (Rusted - No Arm)",
   "variant.weeping_angels.rusted_no_head": "Alice (Rusted - No Head)",
-  "variant.weeping_angels.rusted_no_wing": "Alice (Rusted - Missing Wing)"
+  "variant.weeping_angels.rusted_no_wing": "Alice (Rusted - Missing Wing)",
+  "message.weeping_angels.angel_poses": "Pose",
+  "enchantment.weeping_angels.quantum_breaking": "Quantum Breakage"
 }

@@ -1,6 +1,7 @@
 package mc.craig.software.angels.util;
 
 import mc.craig.software.angels.WAConfiguration;
+import mc.craig.software.angels.common.WAEnchantment;
 import mc.craig.software.angels.common.WASounds;
 import mc.craig.software.angels.common.entity.angel.WeepingAngel;
 import net.minecraft.world.InteractionHand;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -18,7 +20,7 @@ public class HurtHelper {
     public static boolean validatePickaxe(Player player, WeepingAngel weepingAngel, Predicate<ItemStack> predicate) {
         ItemStack heldItem = player.getItemBySlot(EquipmentSlot.MAINHAND);
         if (weepingAngel.getVariant().getDrops().getItem() instanceof BlockItem blockItem) {
-            return predicate.test(heldItem) && heldItem.getItem().isCorrectToolForDrops(blockItem.getBlock().defaultBlockState());
+            return predicate.test(heldItem) && heldItem.getItem().isCorrectToolForDrops(blockItem.getBlock().defaultBlockState()) && EnchantmentHelper.getItemEnchantmentLevel(WAEnchantment.QUANTUM_BREAKING.get(), heldItem) > 0;
         }
         return heldItem.is(WATags.ATTACK_OVERRIDES);
     }

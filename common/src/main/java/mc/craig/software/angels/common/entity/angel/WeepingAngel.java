@@ -3,6 +3,7 @@ package mc.craig.software.angels.common.entity.angel;
 import com.google.common.collect.ImmutableList;
 import mc.craig.software.angels.WAConfiguration;
 import mc.craig.software.angels.common.CatacombTracker;
+import mc.craig.software.angels.common.WAEnchantment;
 import mc.craig.software.angels.common.WAEntities;
 import mc.craig.software.angels.common.WASounds;
 import mc.craig.software.angels.common.entity.angel.ai.AngelEmotion;
@@ -23,7 +24,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -40,6 +40,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -99,31 +100,28 @@ public class WeepingAngel extends AbstractWeepingAngel {
 
     @Override
     public boolean doHurtTarget(Entity pEntity) {
-        float attackDamage = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
 
         // Teleporting
         boolean shouldTeleport = random.nextInt(100) < WAConfiguration.CONFIG.teleportChance.get();
         if (shouldTeleport && pEntity.level instanceof ServerLevel serverLevel) {
             ServerLevel chosenDimension = Teleporter.getRandomDimension(random, serverLevel);
-            double xCoord = getX() + random.nextInt(WAConfiguration.CONFIG.teleportRange.get());
-            double zCoord = getZ() + random.nextInt(WAConfiguration.CONFIG.teleportRange.get());
 
             for (int i = 0; i < 10; i++) {
+                double xCoord = getX() + random.nextInt(WAConfiguration.CONFIG.teleportRange.get());
+                double zCoord = getZ() + random.nextInt(WAConfiguration.CONFIG.teleportRange.get());
                 boolean successfulTeleport = Teleporter.performTeleport(pEntity, Teleporter.getRandomDimension(random, serverLevel), xCoord, chosenDimension.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) xCoord, (int) zCoord), zCoord, pEntity.getYRot(), pEntity.getXRot(), true);
                 if (successfulTeleport) {
                     return true;
                 }
             }
-            return false;
         }
-
         // Theft
-        if (pEntity instanceof Player player) {
+        else if (pEntity instanceof Player player && !player.isCreative()) {
             stealItems(player);
         }
 
         // Hurt
-        boolean didHurt = pEntity.hurt(WADamageSources.SNAPPED_NECK, attackDamage);
+        boolean didHurt = pEntity.hurt(WADamageSources.SNAPPED_NECK, (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
         this.doEnchantDamageEffects(this, pEntity);
         this.setLastHurtMob(pEntity);
         return didHurt;
@@ -195,6 +193,7 @@ public class WeepingAngel extends AbstractWeepingAngel {
         for (int i = 0; i < playerInv.items.size(); i++) {
             ItemStack item = playerInv.items.get(i);
             if (item.is(WATags.STEALABLE_ITEMS)) {
+                if (item.isEnchantable() && EnchantmentHelper.getItemEnchantmentLevel(WAEnchantment.QUANTUM_BREAKING.get(),item) == 0) continue;
                 setItemSlotAndDropWhenKilled(EquipmentSlot.MAINHAND, item.copy());
                 playerInv.setItem(i, ItemStack.EMPTY);
                 return;

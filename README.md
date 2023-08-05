@@ -15,9 +15,5 @@
 <h3>About:</h3> 
 This mod was created for <a href="https://www.curseforge.com/minecraft/modpacks/modjampack-modjam-5">ModJam 5</a>, it was loosely based on the original mod created by a_dizzle back in 1.5.2. (You can even find angels with the original model within the world as a tribute) This mod was started in 1.12 and has spanned every version since then with the exclusion of 1.13. 
 
-<h3>Server Sponsorship:</h3>
-<center>
-  <a href="https://www.bisecthosting.com/clients/aff.php?aff=3107">
-    <img src="https://mc.craig.software/media/angels_sponser.png" alt="Bisect Sponsership">
-  </a>
-</center>
+<h3>Fork addition:</h3>
+Now you can only defeat angel with custom enchant that you can only find in the catacomb!
